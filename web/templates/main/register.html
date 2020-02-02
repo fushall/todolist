@@ -1,0 +1,31 @@
+{% extends "bs4.html" %}
+
+{% block title %}注册页面{% endblock %}
+
+{% block content %}
+  <div class="container-sm" style="max-width: 375px">
+    <h3>注册页面</h3>
+    <div class="card">
+      <form class="card-body" method="post">
+        <div class="form-group">
+          <label for="username">用户名</label>
+          <input id="username" name="username" autocomplete="off" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="password">密码</label>
+          <input id="password" name="password" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="password_prompt">密码提示</label>
+          <input id="password_prompt" name="password_prompt" placeholder="比如：密码是世界上最美好的词" class="form-control">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-block">注册</button>
+        </div>
+        <a href="{{ url_for('main.login') }}" class="btn btn-secondary mt-2" >去登录</a>
+      </form>
+    </div>
+
+
+  </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+<template id="comment_button">
+  <div class="card mt-4">
+    <div class="card-body">
+      <div v-show="!textbox_shown">
+        <button v-on:click="post_comment" class="btn btn-primary btn-block">添加笔记</button>
+      </div>
+      <div v-show="textbox_shown">
+        <textarea v-model="content" class="form-control"></textarea>
+        <button v-on:click="commit">提交</button>
+        <button v-on:click="cancel">取消</button>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+    Vue.component('comment-button', {
+        template: '#comment_button',
+        delimiters: ['${', '}'],
+        data: function () {
+            return {
+                textbox_shown: false,
+                content: ''
+            }
+        },
+        methods: {
+            post_comment: function () {
+                this.textbox_shown = true;
+            },
+            cancel: function () {
+                this.textbox_shown = false;
+            },
+            commit: function () {
+                let request = new Request(
+                    `{{ url_for('item.comments', item_id=item.id) }}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json '
+                        },
+                        body: JSON.stringify({content: this.content}),
+                    }
+                );
+                fetch(request)
+                    .then(response => response.text())
+                    .then(data => console.log(data));
+                this.textbox_shown = false;
+                this.$emit('comment_posted');
+            }
+        }
+    });
+</script>

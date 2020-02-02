@@ -1,0 +1,75 @@
+{% extends "vue.html" %}
+
+{% block title %}详情页{% endblock %}
+
+{% block content %}
+  <div id="app" class="container-sm" style="max-width: 375px">
+
+    <media-player video_url="{{ item.video_url }}"></media-player>
+    <search-bar></search-bar>
+    <comment-button v-on:comment_posted="comment_posted"></comment-button>
+    <comment-list v-bind:do_refresh="do_refresh"></comment-list>
+    <done class="mb-5"></done>
+  </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+
+  {% include "com/media-player.html" %}
+  {% include "com/search-bar.html" %}
+  {% include "com/comment-button.html" %}
+  {% include "com/comment-list.html" %}
+
+
+  <!---------------------- done ----------------------------->
+  <template id="done">
+    <div class="card mt-4">
+      <button v-on:click="done">打卡</button>
+    </div>
+  </template>
+  <script>
+      Vue.component('done', {
+          template: '#done',
+          delimiters: ['${', '}'],
+          data: function () {
+              return {
+                  comment_list: []
+              }
+          },
+          methods: {
+              done: function () {
+                  let request = new Request(
+                      `{{ url_for('item.done', item_id=item.id) }}`,
+                      {
+                          method: 'POST'
+                      }
+                  );
+                  fetch(request)
+                      .then(response => window.open(`{{ url_for('main.index') }}`, '_self'));
+
+              }
+          },
+
+      });
+  </script>
+  <!---------------------- done - end ----------------------------->
+  <script>
+      let app = new Vue({
+          el: '#app',
+          delimiters: ['${', '}'],
+          data: {
+              do_refresh: 0,
+          },
+          methods: {
+              comment_posted: function () {
+                  this.do_refresh = (new Date()).getTime();
+                  console.log(this.do_refresh);
+              }
+          }
+      })
+  </script>
+{% endblock %}

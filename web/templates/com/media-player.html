@@ -1,0 +1,44 @@
+<template id="media_player">
+  <div>
+    <div v-if="current_player.name==='bilibili'" class="card mt-2">
+      <iframe v-bind:src="current_player.src" scrolling="no" border="0" frameborder="no" framespacing="0"
+              allowfullscreen="true"></iframe>
+    </div>
+  </div>
+</template>
+
+
+<script>
+    Vue.component('media-player', {
+        template: '#media_player',
+        delimiters: ['${', '}'],
+        props: ['video_url'],
+        data: function () {
+            return {
+                current_player: {},
+            }
+        },
+        created: function () {
+
+            if (/bilibili/.test(this.video_url)) {
+                let aid = /av([0-9]+)/.exec(this.video_url)[1];
+                let page = 1;
+                try {
+                    page = /p=([0-9]+)/.exec(this.video_url)[1];
+                } catch (e) {
+                    console.log(e)
+                }
+                this.current_player.name = 'bilibili';
+                this.current_player.src = `//player.bilibili.com/player.html?aid=${aid}&page=${page}`;
+            }
+
+
+        }
+    });
+
+    function fill_res_card() {
+
+    }
+
+
+</script>

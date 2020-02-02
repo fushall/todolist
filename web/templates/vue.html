@@ -1,0 +1,23 @@
+{% extends "bs4.html" %}
+
+
+{% block title %}vue{% endblock title %}
+
+
+{% block scripts %}
+  {{ super() }}
+
+  {# vue #}
+  {% if config['ENV'] == 'development' %}
+    <script src="{{ url_for('static', filename='vue/2.6.11/vue.js') }}"></script>
+  {% else %}
+    {% if config['CDN_VUE_JS'] %}
+      {{ config['CDN_VUE_JS'] | safe }}
+    {% else %}
+      <script src="{{ url_for('static', filename='vue/2.6.11/vue.min.js') }}"></script>
+    {% endif %}
+  {% endif %}
+
+
+{% endblock scripts %}
+
