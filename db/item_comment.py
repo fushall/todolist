@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, String, Integer, Sequence, DateTime
 
-from . import Base, session
+from . import Base, session, auto_rollback
 
 
 class ItemComment(Base):
@@ -16,6 +16,7 @@ class ItemComment(Base):
     updated_at = Column(DateTime)
 
 
+@auto_rollback
 def create_item_comment(content, item=None, user=None):
     now = datetime.now()
     item_comment = ItemComment(
@@ -37,6 +38,7 @@ def find_user_item_comments(user_or_id, item_or_id):
         .all()
 
 
+@auto_rollback
 def delete_user_item_comment(user_or_id, item_or_id, comment_or_id):
     item_comment = session.query(ItemComment) \
         .filter_by(user_id=user_or_id if isinstance(user_or_id, int) else user_or_id.id,

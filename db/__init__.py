@@ -1,4 +1,7 @@
+from functools import wraps
+
 from sqlalchemy import create_engine
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.pool import NullPool
@@ -16,6 +19,18 @@ session = scoped_session(
 )
 
 Base = declarative_base()
+
+
+def auto_rollback(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except SQLAlchemyError:
+            session.rollback()
+            raise
+
+    return wrapper
 
 
 def init_db():

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, String, Integer, Sequence, DateTime, Text
 
-from . import Base, session
+from . import Base, session, auto_rollback
 
 
 class Item(Base):
@@ -17,6 +17,7 @@ class Item(Base):
     created_at = Column(DateTime)
 
 
+@auto_rollback
 def create_item(title, video_url='', markdown='', user=None):
     item = Item(
         title=title,
@@ -57,6 +58,7 @@ def get_user_item_detail(user, item_id):
         .first()
 
 
+@auto_rollback
 def delete_user_item(user, item_id):
     item = session.query(Item) \
         .filter_by(user_id=user.id, id=item_id) \
@@ -67,6 +69,7 @@ def delete_user_item(user, item_id):
         return True
 
 
+@auto_rollback
 def done_user_item(user, item_id):
     item = session.query(Item) \
         .filter_by(user_id=user.id, id=item_id) \

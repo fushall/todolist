@@ -2,7 +2,7 @@ from flask_login.mixins import UserMixin
 from sqlalchemy import Column, String, Integer, Sequence
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from . import Base, session
+from . import Base, session, auto_rollback
 
 
 class User(Base, UserMixin):
@@ -24,6 +24,7 @@ def get_user(user_id):
     return session.query(User).get(user_id)
 
 
+@auto_rollback
 def create_user(username, password, password_prompt=''):
     user = User(username=username, password_prompt=password_prompt)
     user.set_password(password)
