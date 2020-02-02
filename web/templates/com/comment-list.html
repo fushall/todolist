@@ -1,0 +1,60 @@
+<template id="comment-list">
+  <div class="card mt-4">
+
+    <div class="card-body">
+      <ul>
+        <li v-for="comment in comment_list">
+          <div>
+            ${comment.content}
+            <button v-on:click="delete_comment(comment.id)">删除</button>
+          </div>
+        </li>
+      </ul>
+
+    </div>
+
+  </div>
+</template>
+<script>
+    Vue.component('comment-list', {
+        template: '#comment-list',
+        delimiters: ['${', '}'],
+        props: ['do_refresh'],
+        data: function () {
+            return {
+
+                comment_list: []
+            }
+        },
+        watch: {
+            do_refresh: function (new_value, old_value) {
+                console.log(new_value, old_value);
+                if (new_value !== old_value) {
+                    this.refresh_comment_list();
+                }
+            }
+        },
+        methods: {
+            refresh_comment_list: function () {
+                fetch(`{{ url_for('item.comments', item_id=item.id) }}`)
+                    .then(request => request.json())
+                    .then(data => this.comment_list = data['comments']);
+            },
+            delete_comment: function (comment_id) {
+                let url = `{{ url_for('item.delete_comment', item_id=item.id, comment_id=-1) }}`;
+                let request = new Request(
+                    url.replace('-1', comment_id),
+                    {
+                        method: 'DELETE'
+                    }
+                );
+                fetch(request)
+                    .then(request => request.json())
+                    .then(data => this.comment_list = data['comments']);
+            }
+        },
+        created: function () {
+            this.refresh_comment_list();
+        }
+    });
+</script>

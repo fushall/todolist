@@ -1,0 +1,9 @@
+python-dotenv
+
+flask
+flask-login
+sqlalchemy
+mysql-connector-python
+redis
+
+gunicorn

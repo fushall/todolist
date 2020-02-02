@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+
+{% block title %}bootstrap{% endblock title %}
+
+
+{% block styles %}
+  {# bootstrap #}
+  {% if config['CDN_BOOTSTRAP_CSS'] %}
+    {{ config['CDN_BOOTSTRAP_CSS'] | safe }}
+  {% else %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/4.4.1/css/bootstrap.min.css') }}">
+  {% endif %}
+{% endblock styles %}
+
+
+{% block scripts %}
+
+  {# jquery #}
+  {% if config['CDN_JQUERY_JS'] %}
+    {{ config['CDN_JQUERY_JS'] | safe }}
+  {% else %}
+    <script src="{{ url_for('static', filename='jquery/3.4.1/jquery.slim.min.js') }}"></script>
+  {% endif %}
+
+  {# popper #}
+  {% if config['CDN_POPPER_JS'] %}
+    {{ config['CDN_POPPER_JS'] | safe }}
+  {% else %}
+    <script src="{{ url_for('static', filename='popper/1.16.0/umd/popper.min.js') }}"></script>
+  {% endif %}
+
+  {# bootstrap #}
+  {% if config['CDN_BOOTSTRAP_JS'] %}
+    {{ config['CDN_BOOTSTRAP_JS'] | safe }}
+  {% else %}
+    <script src="{{ url_for('static', filename='bootstrap/4.4.1/js/bootstrap.min.js') }}"></script>
+  {% endif %}
+
+
+{% endblock scripts %}
+

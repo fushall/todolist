@@ -1,0 +1,57 @@
+<template id="search-bar">
+  <div class="card mt-2">
+    <div class="input-group">
+      <input v-model="text_to_search" type="text" class="form-control"
+             aria-label="Text input with segmented dropdown button">
+      <div target="_blank" class="input-group-append">
+        <button v-on:click="do_search" type="button" class="btn btn-outline-secondary">${current_search_engine.title}
+        </button>
+        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu">
+          <a v-for="se in search_engine_list" v-on:click="select_search_engine(se)" class="dropdown-item" href="#">${se.title}</a>
+          <div v-if="search_engine_gfw_list" role="separator" class="dropdown-divider"></div>
+          <a v-for="se in search_engine_gfw_list" class="dropdown-item" href="#">${se.title}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+    Vue.component('search-bar', {
+        template: '#search-bar',
+        delimiters: ['${', '}'],
+        data: () => {
+            return {
+                text_to_search: '',
+                current_search_engine: {title: '有道', uri: 'http://www.youdao.com/w/eng/{}/#keyfrom=dict2.index'},
+                search_engine_list: [
+                    {title: '有道', uri: 'http://www.youdao.com/w/eng/{}/#keyfrom=dict2.index'},
+                    {title: 'Magi', uri: 'https://magi.com/search?q={}'},
+                    {title: '百度', uri: 'https://www.baidu.com/s?wd={}'},
+                    {title: 'Bing', uri: 'https://cn.bing.com/search?q={}'},
+
+                ],
+                search_engine_gfw_list: [
+                    {title: 'Google', uri: 'http://www.google.com/search?q={}', need_vpn: true},
+                ]
+            }
+        },
+        methods: {
+            select_search_engine: function (se) {
+                this.current_search_engine = se;
+
+            },
+            do_search: function () {
+                window.open(this.current_search_engine.uri.replace('{}', this.text_to_search), '_blank');
+                this.$emit('do_search',
+                    {
+                        search_engine: this.current_search_engine.title,
+                        search_content: this.text_to_search
+                    })
+            }
+        }
+    });
+</script>

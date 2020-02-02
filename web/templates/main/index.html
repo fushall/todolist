@@ -1,0 +1,44 @@
+{% extends "bs4.html" %}
+
+{% block title %}不优秀{% endblock %}
+{% block content %}
+  <div class="container-sm" style="max-width: 375px">
+    <nav class="navbar navbar-light bg-light">
+      <a href="{{ url_for('main.logout') }}">{{ current_user.username }}，退出</a>
+    </nav>
+
+    <div class="card mt-5">
+      <div class="card-body">
+        <a class="btn btn-primary btn-block" href="{{ url_for('item.create') }}">创建一个</a>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-body">
+        <div>未打卡的：</div>
+        <ul>
+          {% for item in unchecked_items %}
+            <li>
+              <a href="{{ url_for('item.detail', item_id=item.id) }}">{{ item.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+
+    <div class="card mt-3">
+      <div class="card-body">
+        <div>已打卡的：</div>
+        <ul>
+          {% for item in checked_items %}
+            <li>
+              <a href="{{ url_for('item.detail', item_id=item.id) }}">{{ item.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

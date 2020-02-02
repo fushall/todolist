@@ -1,0 +1,8 @@
+version: '3'
+services:
+  todolist:
+    image: fushall/todolist:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash
