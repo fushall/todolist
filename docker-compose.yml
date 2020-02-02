@@ -5,4 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: bash
+    ports:
+      - 6066:6066
+#    env_file:
+#      - .env
