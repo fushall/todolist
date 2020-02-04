@@ -78,3 +78,15 @@ def done_user_item(user, item_id):
         item.done_at = datetime.now()
         session.commit()
         return True
+
+
+@auto_rollback
+def reset_user_item_done(user, item_id):
+    item = session.query(Item) \
+        .filter_by(user_id=user.id, id=item_id) \
+        .first()
+    if item:
+        item.done = 0
+        item.done_at = datetime.min
+        session.commit()
+        return True

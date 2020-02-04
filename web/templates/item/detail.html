@@ -10,6 +10,7 @@
     <comment-button v-on:comment_posted="comment_posted"></comment-button>
     <comment-list v-bind:do_refresh="do_refresh"></comment-list>
     <done class="mb-5"></done>
+    <more></more>
   </div>
 
 
@@ -57,6 +58,53 @@
       });
   </script>
   <!---------------------- done - end ----------------------------->
+  <!---------------------- more ----------------------------->
+  <template id="more">
+    <div>
+      <div class="dropdown">
+        <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+          更多
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="{{ url_for('main.index') }}">回到主页</a>
+          <a v-on:click="reset_item_done('{{ item.id }}')" class="dropdown-item" href="#">重置打卡</a>
+          <a v-on:click="delete_item('{{ item.id }}')" class="dropdown-item" href="#">删除本页</a>
+        </div>
+      </div>
+    </div>
+  </template>
+  <script>
+      Vue.component('more', {
+          template: '#more',
+          delimiters: ['${', '}'],
+          methods: {
+              delete_item: function () {
+                  let request = new Request(
+                      `{{ url_for('item.detail', item_id=item.id) }}`,
+                      {
+                          method: 'DELETE'
+                      }
+                  );
+                  fetch(request).then(response => {
+                      if (response.ok) {
+                          window.open(`{{ url_for('main.index') }}`, '_self')
+                      }
+                  })
+              },
+              reset_item_done: function () {
+                  let request = new Request(
+                      `{{ url_for('item.done', item_id=item.id) }}`,
+                      {
+                          method: 'DELETE'
+                      }
+                  );
+                  fetch(request).then(response => console.log('reset_item_done'));
+              }
+          }
+      });
+  </script>
+  <!---------------------- more - end ----------------------------->
   <script>
       let app = new Vue({
           el: '#app',
