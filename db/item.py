@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, String, Integer, Sequence, DateTime, Text
+from sqlalchemy import Column, String, Integer, Sequence, DateTime
 
 from . import Base, session, auto_rollback
 
@@ -12,17 +12,16 @@ class Item(Base):
     user_id = Column(Integer)
     title = Column(String(64))
     video_url = Column(String(512))
-    markdown = Column(Text)
     done = Column(Integer, default=0)
+    done_at = Column(DateTime, default=datetime.min)
     created_at = Column(DateTime)
 
 
 @auto_rollback
-def create_item(title, video_url='', markdown='', user=None):
+def create_item(title, video_url='', user=None):
     item = Item(
         title=title,
         video_url=video_url,
-        markdown=markdown,
         created_at=datetime.now(),
         user_id=user.id if user else None
     )
@@ -76,5 +75,6 @@ def done_user_item(user, item_id):
         .first()
     if item:
         item.done += 1
+        item.done_at = datetime.now()
         session.commit()
         return True
